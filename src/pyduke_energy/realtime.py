@@ -63,7 +63,7 @@ class DukeEnergyRealtime:
                 mqtt.connack_string(conn_res),
             )
         else:
-            _LOGGER.info(
+            _LOGGER.debug(
                 "MQTT connected with result code: %s", mqtt.connack_string(conn_res)
             )
             res = client.subscribe(self.topicid, qos=0)
