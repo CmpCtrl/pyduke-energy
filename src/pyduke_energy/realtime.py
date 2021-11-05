@@ -63,7 +63,7 @@ class DukeEnergyRealtime:
                 mqtt.connack_string(conn_res),
             )
         else:
-            _LOGGER.debug(
+            _LOGGER.info(
                 "MQTT connected with result code: %s", mqtt.connack_string(conn_res)
             )
             res = client.subscribe(self.topicid, qos=0)
@@ -85,7 +85,7 @@ class DukeEnergyRealtime:
         granted_qos : literal[0, 1, 2]
             qos level granted by the server
         """
-        _LOGGER.debug("MQTT subscribed msg_id: %s qos: %s", str(mid), str(granted_qos))
+        _LOGGER.info("MQTT subscribed msg_id: %s qos: %s", str(mid), str(granted_qos))
 
     def on_unsub(self, client: mqtt.Client, _userdata, mid):
         """On Unubscribe callback.
@@ -101,7 +101,7 @@ class DukeEnergyRealtime:
 
         This will call the client.disconnect() method
         """
-        _LOGGER.debug("MQTT unsubscribed msg_id: %s", str(mid))
+        _LOGGER.info("MQTT unsubscribed msg_id: %s", str(mid))
         self.disconnecting = True
         client.disconnect()
 
@@ -123,7 +123,7 @@ class DukeEnergyRealtime:
                 mqtt.error_string(conn_res),
             )
         else:
-            _LOGGER.debug(
+            _LOGGER.info(
                 "MQTT disconnected with result code: %s",
                 mqtt.error_string(conn_res),
             )
@@ -225,7 +225,7 @@ class DukeEnergyRealtime:
                         _LOGGER.debug("Message timeout, requesting fastpoll")
                         await self._fastpoll_req()
                     else:
-                        _LOGGER.debug("Multiple msg timeout, attempting reconnect")
+                        _LOGGER.info("Multiple msg timeout, attempting reconnect")
                         await self._reconnect()
                 self.rx_msg = None
         finally:
