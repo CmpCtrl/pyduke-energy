@@ -162,7 +162,7 @@ class DukeEnergyRealtime:
                 msg_if_decoded = msg.payload.decode("utf8")
             except Exception as ex:
                 msg_if_decoded = f"Could not decode message: {ex}"
-            _LOGGER.debug(
+            _LOGGER.info(
                 "Unexpected message, just skipping for now: %s (decoded = %s)",
                 msg,
                 msg_if_decoded,
