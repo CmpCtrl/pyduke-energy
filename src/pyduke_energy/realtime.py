@@ -110,7 +110,7 @@ class DukeEnergyRealtime:
         granted_qos : literal[0, 1, 2]
             qos level granted by the server
         """
-        _LOGGER.debug("MQTT subscribed msg_id: %s qos: %s", str(mid), str(granted_qos))
+        _LOGGER.info("MQTT subscribed msg_id: %s qos: %s", str(mid), str(granted_qos))
 
     def on_unsubscribe(self, client: mqtt.Client, _userdata: Any, mid: int):
         """On Unubscribe callback.
@@ -153,14 +153,14 @@ class DukeEnergyRealtime:
             )
             self._disconnected.set_exception(MqttCodeError("Disconnect", disconn_res))
         else:
-            _LOGGER.debug(
+            _LOGGER.info(
                 "MQTT disconnected with result code: %s",
                 mqtt.error_string(disconn_res),
             )
             self._disconnected.set_result(disconn_res)
 
         if not self._disconnecting:
-            _LOGGER.debug("Unexpected MQTT disconnect. Will attempt reconnect shortly.")
+            _LOGGER.info("Unexpected MQTT disconnect. Will attempt reconnect shortly.")
 
     @staticmethod
     def on_message(msg: mqtt.MQTTMessage):
@@ -191,7 +191,7 @@ class DukeEnergyRealtime:
                 msg_if_decoded = msg.payload.decode("utf8")
             except Exception as ex:
                 msg_if_decoded = f"Could not decode message: {ex}"
-            _LOGGER.debug(
+            _LOGGER.info(
                 "Unexpected message, just skipping for now: %s (decoded = %s)",
                 msg,
                 msg_if_decoded,
@@ -294,15 +294,15 @@ class DukeEnergyRealtime:
                 except asyncio.TimeoutError:
                     self._msg_retry_count += 1
                     if self._disconnected.done():
-                        _LOGGER.debug(
+                        _LOGGER.info(
                             "Unexpected disconnect detected, attemping reconnect"
                         )
                         await self._reconnect()
                     elif self._msg_retry_count > MESSAGE_TIMEOUT_RETRY_COUNT:
-                        _LOGGER.debug("Multiple msg timeout, attempting reconnect")
+                        _LOGGER.info("Multiple msg timeout, attempting reconnect")
                         await self._reconnect()
                     else:
-                        _LOGGER.debug("Message timeout, requesting fastpoll")
+                        _LOGGER.info("Message timeout, requesting fastpoll")
                         await self._fastpoll_req()
                 self._rx_msg = None
         finally:
